@@ -23,3 +23,25 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+
+
+import { faker } from '@faker-js/faker';
+
+Cypress.Commands.add('fakeUser', () => {
+  // faker seed is optional—use it for deterministic data in CI
+  // faker.seed(12345);
+
+  const first = faker.person.firstName();
+  const last  = faker.person.lastName();
+  const name  = `${first} ${last}`;
+  // Use a non-routable test domain so you never hit real mailboxes
+  const email = faker.internet.email({
+    firstName: first,
+    lastName : last,
+    provider : 'example.testapi',   // or 'example.com'
+  }).toLowerCase();
+
+  return cy.wrap({ name, email });
+});
+
+export {};
